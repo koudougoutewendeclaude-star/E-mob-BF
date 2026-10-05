@@ -204,6 +204,14 @@ VENTE DE PARCELLE ET ACHAT
                     <label>Document de la parcelle</label>
                     <input type="text" required placeholder="Ex: Attestation, Permis d'occuper, TF...">
                 </div>
+
+                <!-- NOUVEAU : Bouton pour accéder à la galerie et ajouter les images -->
+                <div class="form-group">
+                    <label>Images de la parcelle (Galerie / Photos)</label>
+                    <input type="file" id="parcelleImages" accept="image/*" multiple required>
+                    <small style="color: #666; font-size: 11px;">Sélectionnez une ou plusieurs photos du site ou de la parcelle depuis votre appareil.</small>
+                </div>
+
                 <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:6px;">
                     <label style="color:#e65100;">Rappel Commission (8% après vente)</label>
                     <p style="font-size:12px; margin:0;">Le paiement de la commission de 8% se fait directement via Mobile Money aux contacts du concepteur :<br>
@@ -261,7 +269,7 @@ VENTE DE PARCELLE ET ACHAT
 
         function handleVendeur(e) {
             e.preventDefault();
-            alert("Parcelle enregistrée avec succès ! Pensez à régler la commission de 8% via OM (+226 55 48 57 51) ou Moov (+226 52 73 88 39) en cas de vente.");
+            alert("Parcelle et images enregistrées avec succès ! Pensez à régler la commission de 8% via OM (+226 55 48 57 51) ou Moov (+226 52 73 88 39) en cas de vente.");
         }
 
         function handleVisiteur(e) {
@@ -270,4 +278,4 @@ VENTE DE PARCELLE ET ACHAT
         }
     </script>
 </body>
-</html>
+</html>                                                
