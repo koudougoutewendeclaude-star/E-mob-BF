@@ -1,6 +1,6 @@
 # E-mob-BF
 VENTE DE PARCELLE ET ACHAT 
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -38,7 +38,7 @@ VENTE DE PARCELLE ET ACHAT
             color: var(--secondary);
         }
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 20px auto;
             background: white;
             padding: 20px;
@@ -47,12 +47,14 @@ VENTE DE PARCELLE ET ACHAT
         }
         .roles-selector {
             display: flex;
-            gap: 10px;
+            gap: 5px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .role-btn {
             flex: 1;
-            padding: 12px;
+            min-width: 100px;
+            padding: 10px;
             border: 2px solid var(--primary);
             background: white;
             color: var(--primary);
@@ -61,6 +63,7 @@ VENTE DE PARCELLE ET ACHAT
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
+            font-size: 13px;
         }
         .role-btn.active {
             background: var(--primary);
@@ -113,13 +116,35 @@ VENTE DE PARCELLE ET ACHAT
             max-height: 100px;
             overflow-y: auto;
         }
+        /* Style de la banque d'images / catalogue */
+        .parcelle-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+        .parcelle-images {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-top: 10px;
+            padding-bottom: 5px;
+        }
+        .parcelle-images img {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>🏡 E'Mob BF</h1>
-        <p>Acquérez votre parcelle au Burkina Faso en toute sécurité (Intérieur & Diaspora)</p>
+        <p>Vente et Achat de Parcelles au Burkina Faso (Intérieur & Diaspora)</p>
     </header>
 
     <div class="container">
@@ -127,6 +152,7 @@ VENTE DE PARCELLE ET ACHAT
             <button class="role-btn active" onclick="switchRole('acheteur')">Acheteur</button>
             <button class="role-btn" onclick="switchRole('vendeur')">Vendeur</button>
             <button class="role-btn" onclick="switchRole('visiteur')">Visiteur</button>
+            <button class="role-btn" onclick="switchRole('catalogue')">Banque d'Images</button>
         </div>
 
         <!-- Section Acheteur -->
@@ -135,11 +161,11 @@ VENTE DE PARCELLE ET ACHAT
             <form onsubmit="handleAcheteur(event)">
                 <div class="form-group">
                     <label>Nom et Prénom</label>
-                    <input type="text" required placeholder="Ex: Koudougou Tewende Claude">
+                    <input type="text" id="achNom" required placeholder="Ex: Koudougou Tewende Claude">
                 </div>
                 <div class="form-group">
                     <label>Numéro de Téléphone</label>
-                    <input type="tel" required placeholder="Ex: +226 ...">
+                    <input type="tel" id="achTel" required placeholder="Ex: +226 ...">
                 </div>
                 <div class="form-group">
                     <label>Numéro CNIB ou Passeport</label>
@@ -171,15 +197,15 @@ VENTE DE PARCELLE ET ACHAT
 
         <!-- Section Vendeur -->
         <div id="vendeur" class="form-section">
-            <h2>Espace Vendeur</h2>
+            <h2>Espace Vendeur & Publication</h2>
             <form onsubmit="handleVendeur(event)">
                 <div class="form-group">
                     <label>Nom et Prénom</label>
-                    <input type="text" required placeholder="Votre nom complet">
+                    <input type="text" id="vendNom" required placeholder="Votre nom complet">
                 </div>
                 <div class="form-group">
                     <label>Numéro de Téléphone</label>
-                    <input type="tel" required placeholder="Votre numéro">
+                    <input type="tel" id="vendTel" required placeholder="Votre numéro">
                 </div>
                 <div class="form-group">
                     <label>Numéro CNIB ou Passeport</label>
@@ -187,34 +213,32 @@ VENTE DE PARCELLE ET ACHAT
                 </div>
                 <div class="form-group">
                     <label>Zone / Lieu de la parcelle</label>
-                    <input type="text" required placeholder="Ex: Ouagadougou, Saaba...">
+                    <input type="text" id="vendZone" required placeholder="Ex: Ouagadougou, Saaba...">
                 </div>
                 <div class="form-group">
                     <label>Caractéristiques de la parcelle</label>
-                    <select>
-                        <option>Viabilisé</option>
-                        <option>Non viabilisé</option>
+                    <select id="vendCaract">
+                        <option value="Viabilisé">Viabilisé</option>
+                        <option value="Non viabilisé">Non viabilisé</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Taille de la parcelle (m²)</label>
-                    <input type="text" required placeholder="Ex: 300m²">
+                    <input type="text" id="vendTaille" required placeholder="Ex: 300m²">
                 </div>
                 <div class="form-group">
                     <label>Document de la parcelle</label>
-                    <input type="text" required placeholder="Ex: Attestation, Permis d'occuper, TF...">
+                    <input type="text" id="vendDoc" required placeholder="Ex: Attestation, Permis d'occuper, TF...">
                 </div>
-
-                <!-- NOUVEAU : Bouton pour accéder à la galerie et ajouter les images -->
                 <div class="form-group">
-                    <label>Images de la parcelle (Galerie / Photos)</label>
-                    <input type="file" id="parcelleImages" accept="image/*" multiple required>
-                    <small style="color: #666; font-size: 11px;">Sélectionnez une ou plusieurs photos du site ou de la parcelle depuis votre appareil.</small>
+                    <label>Images de la parcelle (Galerie)</label>
+                    <input type="file" id="parcelleImagesInput" accept="image/*" multiple required>
+                    <small style="color: #666; font-size: 11px;">Ajoutez des photos visibles par les visiteurs et acheteurs.</small>
                 </div>
 
                 <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:6px;">
                     <label style="color:#e65100;">Rappel Commission (8% après vente)</label>
-                    <p style="font-size:12px; margin:0;">Le paiement de la commission de 8% se fait directement via Mobile Money aux contacts du concepteur :<br>
+                    <p style="font-size:12px; margin:0;">Paiement de la commission via Mobile Money aux contacts du concepteur :<br>
                     • <strong>Orange Money :</strong> +226 55 48 57 51<br>
                     • <strong>Moov Money :</strong> +226 52 73 88 39</p>
                 </div>
@@ -222,7 +246,7 @@ VENTE DE PARCELLE ET ACHAT
                 <div class="form-group">
                     <label>Contrat Vendeur</label>
                     <div class="contract-box">
-                        Je certifie être le propriétaire ou le mandataire légal de la parcelle mise en vente. Je m'engage à verser la commission obligatoire de 8% au concepteur après la vente effective de la parcelle via la plateforme E'Mob BF.
+                        Je certifie être le propriétaire ou le mandataire légal de la parcelle. Je m'engage à verser la commission obligatoire de 8% au concepteur après la vente effective via E'Mob BF.
                     </div>
                     <label><input type="checkbox" required> J'accepte les termes du contrat</label>
                 </div>
@@ -243,18 +267,34 @@ VENTE DE PARCELLE ET ACHAT
                     <label>Numéro de Téléphone</label>
                     <input type="tel" required placeholder="Votre numéro">
                 </div>
-                <button type="submit" class="btn-submit">Accéder aux images des parcelles</button>
+                <button type="submit" class="btn-submit">Accéder à la Banque d'Images</button>
             </form>
+        </div>
+
+        <!-- Section Banque d'Images / Catalogue Public -->
+        <div id="catalogue" class="form-section">
+            <h2>Banque d'Images & Parcelles Disponibles</h2>
+            <p style="font-size: 13px; color: #666;">Voici toutes les parcelles enregistrées par les vendeurs à travers le Burkina Faso.</p>
+            <div id="parcellesList">
+                <p style="text-align: center; color: #888;">Aucune parcelle enregistrée pour le moment. Soyez le premier vendeur à publier !</p>
+            </div>
         </div>
     </div>
 
     <script>
+        // Charger les parcelles enregistrées depuis la mémoire du navigateur
+        let parcelles = JSON.parse(localStorage.getItem('emob_parcelles')) || [];
+
         function switchRole(roleId) {
             document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.role-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(roleId).classList.add('active');
             event.target.classList.add('active');
+
+            if(roleId === 'catalogue') {
+                afficherCatalogue();
+            }
         }
 
         function toggleDemarcheurFields() {
@@ -264,18 +304,90 @@ VENTE DE PARCELLE ET ACHAT
 
         function handleAcheteur(e) {
             e.preventDefault();
-            alert("Inscription acheteur enregistrée avec succès sur E'Mob BF !");
-        }
-
-        function handleVendeur(e) {
-            e.preventDefault();
-            alert("Parcelle et images enregistrées avec succès ! Pensez à régler la commission de 8% via OM (+226 55 48 57 51) ou Moov (+226 52 73 88 39) en cas de vente.");
+            alert("Inscription acheteur réussie ! Vous pouvez maintenant consulter la Banque d'Images.");
+            switchRole('catalogue');
         }
 
         function handleVisiteur(e) {
             e.preventDefault();
-            alert("Bienvenue sur E'Mob BF ! Accès aux images autorisé.");
+            alert("Accès autorisé ! Bienvenue dans la Banque d'Images E'Mob BF.");
+            switchRole('catalogue');
+        }
+
+        function handleVendeur(e) {
+            e.preventDefault();
+            const filesInput = document.getElementById('parcelleImagesInput');
+            let imagesArray = [];
+
+            if (filesInput.files.length > 0) {
+                let filesProcessed = 0;
+                Array.from(filesInput.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagesArray.push(event.target.result);
+                        filesProcessed++;
+                        if (filesProcessed === filesInput.files.length) {
+                            sauvegarderParcelle(imagesArray);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                sauvegarderParcelle([]);
+            }
+        }
+
+        function sauvegarderParcelle(images) {
+            const nouvelleParcelle = {
+                nom: document.getElementById('vendNom').value,
+                tel: document.getElementById('vendTel').value,
+                zone: document.getElementById('vendZone').value,
+                caract: document.getElementById('vendCaract').value,
+                taille: document.getElementById('vendTaille').value,
+                doc: document.getElementById('vendDoc').value,
+                images: images
+            };
+
+            parcelles.push(nouvelleParcelle);
+            localStorage.setItem('emob_parcelles', JSON.stringify(parcelles));
+
+            alert("Parcelle publiée avec succès ! Elle est désormais visible dans la Banque d'Images.\n\nRappel Commission 8% :\n- Orange Money : +226 55 48 57 51\n- Moov Money : +226 52 73 88 39");
+            document.querySelector('#vendeur form').reset();
+            switchRole('catalogue');
+        }
+
+        function afficherCatalogue() {
+            const container = document.getElementById('parcellesList');
+            if (parcelles.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: #888;">Aucune parcelle enregistrée pour le moment.</p>`;
+                return;
+            }
+
+            let html = '';
+            parcelles.forEach((p, index) => {
+                let imagesHtml = '';
+                if (p.images && p.images.length > 0) {
+                    p.images.forEach(img => {
+                        imagesHtml += `<img src="${img}" alt="Parcelle">`;
+                    });
+                } else {
+                    imagesHtml = `<p style="font-size:12px; color:#888;">Aucune image fournie</p>`;
+                }
+
+                html += `
+                    <div class="parcelle-card">
+                        <h3 style="margin: 0 0 5px 0; color: var(--primary);">📍 ${p.zone}</h3>
+                        <p style="margin: 3px 0; font-size: 13px;"><strong>Taille :</strong> ${p.taille} | <strong>État :</strong> ${p.caract}</p>
+                        <p style="margin: 3px 0; font-size: 13px;"><strong>Document :</strong> ${p.doc}</p>
+                        <p style="margin: 3px 0; font-size: 13px; color: #555;"><strong>Vendeur :</strong> ${p.nom} (${p.tel})</p>
+                        <div class="parcelle-images">
+                            ${imagesHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
     </script>
 </body>
-</html>                                                
+</html>                                                             
