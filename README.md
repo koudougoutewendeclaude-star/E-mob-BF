@@ -1,12 +1,15 @@
 # E-mob-BF
 VENTE DE PARCELLE ET ACHAT 
  WENDATA GLOBAL VISION IMMO
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E'Mob BF - Vente et Achat de Parcelles au Burkina Faso</title>
+    <!-- Lien vers le manifeste PWA pour le téléchargement -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2e7d32">
     <style>
         :root {
             --primary: #2e7d32;
@@ -46,7 +49,23 @@ VENTE DE PARCELLE ET ACHAT
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        /* Bouton Spécial Photos du Site / Banque d'images */
+        /* Bouton Télécharger l'App */
+        #btnInstall {
+            display: none;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        /* Bouton Spécial Photos du site / Banque d'images */
         .btn-photos-site {
             background-color: var(--secondary);
             color: #333;
@@ -136,7 +155,6 @@ VENTE DE PARCELLE ET ACHAT
             max-height: 100px;
             overflow-y: auto;
         }
-        /* Style des cartes de parcelles dans la banque d'images */
         .parcelle-card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -169,7 +187,10 @@ VENTE DE PARCELLE ET ACHAT
 
     <div class="container">
         
-        <!-- BOUTON UNIVERSEL : Photos du site / Banque d'images (Accessible à tous) -->
+        <!-- Bouton d'installation de l'application (S'affiche dynamiquement sur mobile) -->
+        <button id="btnInstall" onclick="installerApp()">📥 Télécharger / Installer E'Mob BF sur votre téléphone</button>
+
+        <!-- BOUTON UNIVERSEL : Photos du site / Banque d'images -->
         <button class="btn-photos-site" onclick="switchRole('catalogue')">
             📷 Photos du site (Banque d'images & Parcelles disponibles)
         </button>
@@ -296,7 +317,7 @@ VENTE DE PARCELLE ET ACHAT
             </form>
         </div>
 
-        <!-- Section Banque d'Images / Photos du site (Accessible à tous) -->
+        <!-- Section Banque d'Images / Photos du site -->
         <div id="catalogue" class="form-section">
             <h2>📷 Banque d'Images & Photos du Site</h2>
             <p style="font-size: 13px; color: #666;">Consultez ci-dessous les parcelles disponibles, leurs caractéristiques, localisations et les contacts des vendeurs.</p>
@@ -307,6 +328,25 @@ VENTE DE PARCELLE ET ACHAT
     </div>
 
     <script>
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('btnInstall').style.display = 'block';
+        });
+
+        function installerApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Utilisateur a accepté l\'installation');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
         let parcelles = JSON.parse(localStorage.getItem('emob_parcelles')) || [];
 
         function switchRole(roleId) {
@@ -315,7 +355,6 @@ VENTE DE PARCELLE ET ACHAT
             
             document.getElementById(roleId).classList.add('active');
             
-            // Si ce n'est pas le catalogue, activer le bouton du rôle correspondant si présent
             const activeRoleBtn = document.querySelector(`.role-btn[onclick*="${roleId}"]`);
             if(activeRoleBtn) {
                 activeRoleBtn.classList.add('active');
@@ -420,4 +459,4 @@ VENTE DE PARCELLE ET ACHAT
         }
     </script>
 </body>
-</html> 
+</html>         :          
